@@ -6,8 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\ContactType;
+use App\Form\CategoryType;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Contact;
+use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 
 class BaseController extends AbstractController
@@ -57,10 +59,25 @@ class BaseController extends AbstractController
         ]);
     }
 
-    #[Route('/categories', name: 'app_categories')]
-    public function categories(): Response
+    #[Route('/add_category', name: 'app_add_category')]
+    public function add_category(Request $request, EntityManagerInterface $em): Response
     {
-        return $this->render('base/categories.html.twig', [
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+
+        if($request->isMethod('POST')){
+            $form->handleRequest($request);
+            if($form->isSubmitted()&&$form->isValid()){
+                $em->persist($category);
+                $em->flush();
+                $this->addFlash('notice','Category added');
+                return $this->redirectToRoute('app_add_category');
+            }
+        }
+
+
+        return $this->render('base/add_category.html.twig', [
+            'form' => $form->createView()
 
         ]);
     }
