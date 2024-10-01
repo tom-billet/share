@@ -17,14 +17,16 @@
                                 <th scope="col">Nom</th>
                                 <th scope="col">Sujet</th>
                                 <th scope="col">Email</th>
+                                <th scope="col">Date d'envoi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for contact in contacts %}
+                            {% for contact in contacts | sort((a, b) => b.sendingDate <=> a.sendingDate) %}
                                 <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
                                     <td>{{ contact.name | capitalize }}</td>
                                     <td>{{ contact.topic | capitalize }}</td>
                                     <td>{{ contact.email | lower }}</td>
+                                    <td>{{ contact.sendingDate | date("d-m-Y à H:i:s") }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

@@ -47,6 +47,7 @@ class BaseController extends AbstractController
         if($request->isMethod('POST')){
             $form->handleRequest($request);
             if($form->isSubmitted()&&$form->isValid()){
+                $contact->setSendingDate(new \Datetime());
                 $em->persist($contact);
                 $em->flush();
                 $this->addFlash('notice','Message Sent');
