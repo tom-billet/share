@@ -59,7 +59,7 @@ class BaseController extends AbstractController
         ]);
     }
 
-    #[Route('/add_category', name: 'app_add_category')]
+    #[Route('/add-category', name: 'app_add_category')]
     public function add_category(Request $request, EntityManagerInterface $em): Response
     {
         $category = new Category();
