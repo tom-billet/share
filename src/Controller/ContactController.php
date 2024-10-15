@@ -10,7 +10,7 @@ use App\Repository\ContactRepository;
 class ContactController extends AbstractController
 {
 
-    #[Route('/contacts-list', name: 'app_contacts_lists')]
+    #[Route('/moderation/contacts-list', name: 'app_contacts_lists')]
     public function ContactsList(ContactRepository $contactRepository): Response {
         $contacts = $contactRepository->findAll();
         return $this->render('contact/contacts_list.html.twig', [

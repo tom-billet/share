@@ -36,6 +36,11 @@
                     <li class="nav-item">
                     <a class="nav-link" href="{{path('app_contact')}}">Contact</a>
                     </li>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MOD')%}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{path('app_contacts_lists')}}">Liste contacts</a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                     <div class="dropdown-menu">
