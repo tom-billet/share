@@ -70,11 +70,28 @@ class UserController extends AbstractController
         }
 
 
-
         return $this->render('user/account.html.twig', [
             'user'=>$user,
             'form' => $form->createView(),
             'subcategories'=> $subcategories
         ]);
+    }
+
+
+    #[Route('/private/account-download/{id}', name: 'app_account_download',requirements: ["id"=>"\d+"] )]
+    public function accountDownload(File $file) 
+    {
+
+        if ($file == null){
+            return $this->redirectToRoute('app_account');
+        }
+        else{
+            if($file->getUser()!==$this->getUser()){
+                $this->addFlash('notice', 'Vous n\'êtes pas le propriétaire de ce fichier');
+                return $this->redirectToRoute('app_account');
+            }
+            return $this->file($this->getParameter('file_directory').'/'.$file->getServerName(),
+            $file->getOriginalName());
+        }
     }
 }
