@@ -51,9 +51,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'user')]
     private Collection $files;
 
+    /**
+     * @var Collection<int, self>
+     */
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'ask')]
+    private Collection $usersAsk;
+
+    #[ORM\JoinTable(name: "user_ask")]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'ask_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: 'User', inversedBy: 'ask')]
+    private Collection $ask;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'userAccept')]
+    #[ORM\JoinTable(name: "user_accept",
+        joinColumns: [new ORM\JoinColumn(name: "user_id", referencedColumnName: "id")],
+        inverseJoinColumns: [new ORM\JoinColumn(name: "accept_id", referencedColumnName:"id")]
+    )]
+    private Collection $accept;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'accept')]
+    private Collection $userAccept;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
+        $this->ask = new ArrayCollection();
+        $this->usersAsk = new ArrayCollection();
+        $this->accept = new ArrayCollection();
+        $this->userAccept = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -192,6 +228,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($file->getUser() === $this) {
                 $file->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAsk(): Collection
+    {
+        return $this->ask;
+    }
+
+    public function addAsk(self $ask): static
+    {
+        if (!$this->ask->contains($ask)) {
+            $this->ask->add($ask);
+        }
+
+        return $this;
+    }
+
+    public function removeAsk(self $ask): static
+    {
+        $this->ask->removeElement($ask);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getUsersAsk(): Collection
+    {
+        return $this->usersAsk;
+    }
+
+    public function addUsersAsk(self $usersAsk): static
+    {
+        if (!$this->usersAsk->contains($usersAsk)) {
+            $this->usersAsk->add($usersAsk);
+            $usersAsk->addAsk($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersAsk(self $usersAsk): static
+    {
+        if ($this->usersAsk->removeElement($usersAsk)) {
+            $usersAsk->removeAsk($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getAccept(): Collection
+    {
+        return $this->accept;
+    }
+
+    public function addAccept(self $accept): static
+    {
+        if (!$this->accept->contains($accept)) {
+            $this->accept->add($accept);
+        }
+
+        return $this;
+    }
+
+    public function removeAccept(self $accept): static
+    {
+        $this->accept->removeElement($accept);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getUserAccept(): Collection
+    {
+        return $this->userAccept;
+    }
+
+    public function addUserAccept(self $userAccept): static
+    {
+        if (!$this->userAccept->contains($userAccept)) {
+            $this->userAccept->add($userAccept);
+            $userAccept->addAccept($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAccept(self $userAccept): static
+    {
+        if ($this->userAccept->removeElement($userAccept)) {
+            $userAccept->removeAccept($this);
         }
 
         return $this;

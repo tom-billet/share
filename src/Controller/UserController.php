@@ -11,7 +11,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Repository\UserRepository;
 use App\Repository\SubcategoryRepository;
 use App\Entity\File;
+use App\Entity\User;
 use App\Form\FileUserType;
+use App\Form\AddFriendType;
 
 class UserController extends AbstractController
 {
@@ -94,4 +96,7 @@ class UserController extends AbstractController
             $file->getOriginalName());
         }
     }
+
+
+    
 }
