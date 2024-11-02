@@ -13,10 +13,13 @@
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
 				<div class="table-responsive">
+                    {{ form_start(form) }}
 					<table class="table table-hover">
 						<thead>
 							<tr class="fw-bold text-primary">
 								<th scope="col">Libellé</th>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
                                 <th scope="col"></th>
 							</tr>
 						</thead>
@@ -36,10 +39,14 @@
 										{% endif %}
 									</td>
                                     <td><a href="{{path("app_edit_category",{'id':category.id})}}"><i class="bi bi-pen-fill text-dark"></i></a></td>
-								</tr>
+                                    <td><a href="{{path("app_delete_category",{'id':category.id})}}"><i class="bi bi-trash-fill text-dark"></i></a></td>
+                                    <td>{{ form_widget(form.categories[category.id]) }}</td>
+                                </tr>
 							{% endfor %}
 						</tbody>
 					</table>
+                {{ form_widget(form.supprimer) }}
+                {{ form_end(form) }}
 				</div>
 			</div>
 		</div>
