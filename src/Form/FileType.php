@@ -37,6 +37,7 @@ class FileType extends AbstractType
                 },
             ])
             ->add('Ajouter', SubmitType::class, ['attr' => ['class' => 'btn bg-primary text-white m4'], 'row_attr' => ['class'=>'text-center'],])
+            
         ;
     }
 

@@ -17,12 +17,14 @@
 						<thead>
 							<tr class="fw-bold text-primary">
 								<th scope="col">Libellé</th>
+                                <th scope="col"></th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for category in categories | sort((a, b) => b.label <=> a.label) %}
+							{% for category in categories | sort((a, b) => a.label <=> b.label) %}
 								<tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
 									<td>{{ category.label }}
+                                    
 										{% if category.subcategories | length > 0 %}
 											<ul>
 												{% for sc in category.subcategories |sort((a, b) => a.number <=> b.number) %}
@@ -33,6 +35,7 @@
 											</ul>
 										{% endif %}
 									</td>
+                                    <td><a href="{{path("app_edit_category",{'id':category.id})}}"><i class="bi bi-pen-fill text-dark"></i></a></td>
 								</tr>
 							{% endfor %}
 						</tbody>
