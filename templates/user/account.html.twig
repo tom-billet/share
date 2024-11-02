@@ -38,6 +38,7 @@
 					</tr>
 				</table>
 
+				<h2 class="text-center text-primary fw-bold">Mes fichiers</h2>
 				{% if user.files | length > 0 %}
                     {% for file in user.files %}
                         <tr>
@@ -58,6 +59,31 @@
                         <td class="text-center">Aucun fichier</td>
                     </tr>
                 {% endif %}
+
+
+				<h2 class="text-center text-primary fw-bold">Ajouter un fichier</h2>
+				{{ form_start(form) }}
+                {{ form_row(form.file) }}
+					<div class="table-responsive">
+						<table class="table">
+							{% set id = null %}
+							{% for subcategory in subcategories %}
+								<tr>
+									{% if id != subcategory.category.id %}
+										{% set id = subcategory.category.id %}
+										<tr><td class="text-primary fw-bold">{{subcategory.category.id}}) {{subcategory.category.label}}<td></td></tr>
+									{% endif %}
+									<td>
+										-
+										{{subcategory.number}})
+										{{subcategory.label}}</td>
+									<td class="text-primary">{{ form_widget(form.subcategories[subcategory.id]) }}</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</div>
+                {{ form_row(form.ajouter) }}
+                {{ form_end(form) }}
 				
 			</div>
 		</div>
