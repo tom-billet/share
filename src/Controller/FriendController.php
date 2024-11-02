@@ -14,7 +14,7 @@ use App\Entity\User;
 class FriendController extends AbstractController
 {
     #[Route('/private/friends', name: 'app_friends')]
-    public function addFriend(Request $request, EntityManagerInterface $em, UserRepository $userRepository): Response
+    public function Friends(Request $request, EntityManagerInterface $em, UserRepository $userRepository): Response
     {
 
         if($request->get('id')!=null){
@@ -54,6 +54,18 @@ class FriendController extends AbstractController
             }
         }
 
+        if($request->get('idRemove')!=null){
+            $id = $request->get('idRemove');
+            $userRemove = $userRepository->find($id);
+            if($userRemove){
+                $this->getUser()->removeAccept($userRemove);
+                $em->persist($this->getUser());
+                $em->flush();
+                $this->addFlash('notice','Amitié supprimée');
+                return $this->redirectToRoute('app_friends');
+            }
+        }
+
         $form = $this->createForm(AddFriendType::class);
 
         if($request->isMethod('POST')){
@@ -79,4 +91,17 @@ class FriendController extends AbstractController
             'form'=>$form
         ]);
     }
+
+
+    /*#[Route('/moderation/delete-friend/{id}', name: 'app_delete_friend')]
+    public function deleteFriend(Request $request, EntityManagerInterface $em): Response {
+
+        if($category!=null){
+            $em->remove($category);
+            $em->flush();
+            $this->addFlash('notice','Catégorie supprimée');
+        }
+
+        return $this->redirectToRoute('app_categories');
+    }*/
 }
