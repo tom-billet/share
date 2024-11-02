@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}Ajouter une sous-catégorie{% endblock %}
+
+{% block body %}
+    <div cass='container-fuid'>
+        <div class='row justify-content-center'>
+            <div class='col-10 text-primary'>
+                <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Ajouter une sous-catégorie</h1>
+                {{form(form)}}
+            </div>
+        </div>
+    </div>
+{% endblock %}
