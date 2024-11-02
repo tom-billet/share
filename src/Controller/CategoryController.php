@@ -10,10 +10,10 @@ use App\Repository\CategoryRepository;
 class CategoryController extends AbstractController
 {
 
-    #[Route('/categories-list', name: 'app_categories_lists')]
-    public function CategoriesList(CategoryRepository $categoryRepository): Response {
+    #[Route('/moderation/categories', name: 'app_categories')]
+    public function Categories(CategoryRepository $categoryRepository): Response {
         $categories = $categoryRepository->findAll();
-        return $this->render('category/categories_list.html.twig', [
+        return $this->render('category/categories.html.twig', [
             'categories' => $categories
         ]); 
     }
