@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\File;
 use App\Entity\User;
+use App\Entity\Subcategory;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +37,14 @@ class FileType extends AbstractType
                     ->addOrderBy('u.name', 'ASC');
                 },
             ])
-            ->add('Ajouter', SubmitType::class, ['attr' => ['class' => 'btn bg-primary text-white m4'], 'row_attr' => ['class'=>'text-center'],])
+            ->add('subcategories', EntityType::class, [
+                'class' => Subcategory::class,
+                'choices' => $options['subcategories'],
+                'choice_label' => 'label',
+                'expanded' => true,
+                'multiple' => true,
+                'label' => false, 'mapped' => false])
+            ->add('ajouter', SubmitType::class, ['attr' => ['class' => 'btn bg-primary text-white m4'], 'row_attr' => ['class'=>'text-center'],])
             
         ;
     }
@@ -45,6 +53,7 @@ class FileType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => File::class,
+            'subcategories' => []
         ]);
     }
 }

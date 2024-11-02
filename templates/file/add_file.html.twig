@@ -1,14 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{parent()}}Ajouter un fichier{% endblock %}
+{% block title %}
+	{{parent()}}Ajouter un fichier
+{% endblock %}
 
 {% block body %}
-    <div cass='container-fuid'>
-        <div class='row justify-content-center'>
-            <div class='col-10 text-primary'>
-                <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Ajouter un fichier</h1>
-                {{form(form)}}
-            </div>
-        </div>
-    </div>
-{% endblock %}
+	<div cass='container-fuid'>
+		<div class='row justify-content-center'>
+			<div class='col-10 text-primary'>
+				<h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Ajouter un fichier</h1>
+				{{ form_start(form) }}
+                {{ form_row(form.originalName) }}
+                {{ form_row(form.serverName) }}
+                {{ form_row(form.extension) }}
+                {{ form_row(form.size) }}
+                {{ form_row(form.user) }}
+					<div class="table-responsive">
+						<table class="table">
+							{% set id = null %}
+							{% for subcategory in subcategories %}
+								<tr>
+									{% if id != subcategory.category.id %}
+										{% set id = subcategory.category.id %}
+										<tr><td class="text-primary fw-bold">{{subcategory.category.id}}) {{subcategory.category.label}}<td></td></tr>
+									{% endif %}
+									<td>
+										-
+										{{subcategory.number}})
+										{{subcategory.label}}</td>
+									<td class="text-primary">{{ form_widget(form.subcategories[subcategory.id]) }}</td>
+								</tr>
+							{% endfor %}
+						</table>
+					</div>
+                {{ form_row(form.ajouter) }}
+                {{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	{% endblock %}

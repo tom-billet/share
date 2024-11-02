@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\EventListener\SubcategoryListener;
 use App\Repository\SubcategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubcategoryRepository::class)]
@@ -24,6 +26,17 @@ class Subcategory
 
     #[ORM\Column]
     private ?int $number = null;
+
+    /**
+     * @var Collection<int, File>
+     */
+    #[ORM\ManyToMany(targetEntity: File::class, mappedBy: 'subcategories')]
+    private Collection $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,6 +75,33 @@ class Subcategory
     public function setNumber(int $number): static
     {
         $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(File $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->addSubcategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(File $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            $file->removeSubcategory($this);
+        }
 
         return $this;
     }

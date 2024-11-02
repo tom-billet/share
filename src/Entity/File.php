@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,6 +34,17 @@ class File
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Subcategory>
+     */
+    #[ORM\ManyToMany(targetEntity: Subcategory::class, inversedBy: 'files')]
+    private Collection $subcategories;
+
+    public function __construct()
+    {
+        $this->subcategories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +119,30 @@ class File
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Subcategory>
+     */
+    public function getSubcategories(): Collection
+    {
+        return $this->subcategories;
+    }
+
+    public function addSubcategory(Subcategory $subcategory): static
+    {
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories->add($subcategory);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcategory(Subcategory $subcategory): static
+    {
+        $this->subcategories->removeElement($subcategory);
 
         return $this;
     }
