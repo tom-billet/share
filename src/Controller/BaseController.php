@@ -50,7 +50,7 @@ class BaseController extends AbstractController
                 $contact->setSendingDate(new \Datetime());
                 $em->persist($contact);
                 $em->flush();
-                $this->addFlash('notice','Message Sent');
+                $this->addFlash('notice','Message envoyé');
                 return $this->redirectToRoute('app_contact');
             }
         }
@@ -71,7 +71,7 @@ class BaseController extends AbstractController
             if($form->isSubmitted()&&$form->isValid()){
                 $em->persist($category);
                 $em->flush();
-                $this->addFlash('notice','Category added');
+                $this->addFlash('notice','Catégorie ajoutée');
                 return $this->redirectToRoute('app_add_category');
             }
         }

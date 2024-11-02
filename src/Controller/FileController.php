@@ -12,11 +12,12 @@ use App\Entity\File;
 use App\Repository\FileRepository;
 use App\Repository\SubcategoryRepository;
 use App\Repository\UserRepository;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileController extends AbstractController
 {
     #[Route('/admin/add-file', name: 'app_add_file')]
-    public function add_file(Request $request, SubcategoryRepository $subcategoryRepository, EntityManagerInterface $em): Response
+    public function add_file(Request $request, SubcategoryRepository $subcategoryRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $file = new File();
         $subcategories = $subcategoryRepository->findBy([], ['category'=>'asc', 'number'=>'asc']);
@@ -31,10 +32,28 @@ class FileController extends AbstractController
                     $file->addSubcategory($subcategory);
                 }
 
-                $em->persist($file);
-                $em->flush();
-                $this->addFlash('notice','File added');
-                return $this->redirectToRoute('app_add_file');
+                $f = $form->get('file')->getData();
+                if($f){
+                    $nomFichierServeur = pathinfo($f->getClientOriginalName(),PATHINFO_FILENAME);
+                    $nomFichierServeur = $slugger->slug($nomFichierServeur);
+                    $nomFichierServeur = $nomFichierServeur.'-'.uniqid().'.'.$f->guessExtension();
+                    try{
+                        $file->setServerName($nomFichierServeur);
+                        $file->setOriginalName($f->getClientOriginalName());
+                        $file->setSendingDate(new \Datetime());
+                        $file->setExtension($f->guessExtension());
+                        $file->setSize($f->getSize());
+                        $em->persist($file);
+                        $em->flush();
+
+                        $f->move($this->getParameter('file_directory'), $nomFichierServeur);
+                        $this->addFlash('notice', 'Fichier envoyé');
+                        return $this->redirectToRoute('app_add_file');
+                    }
+                    catch(FileException $e){
+                        $this->addFlash('notice', 'Erreur d\'envoi');
+                    }
+                }
             }
         }
 
@@ -54,7 +73,7 @@ class FileController extends AbstractController
     }
 
 
-    #[Route('/admin/files-user', name: 'app_files_by_user')]
+    #[Route('/private/files-user', name: 'app_files_by_user')]
     public function filesByUser(UserRepository $userRepository): Response{
 
         $users = $userRepository->findBy([], ['surname'=>'asc', 'name'=>'asc']);
@@ -62,5 +81,18 @@ class FileController extends AbstractController
         return $this->render('file/files_by_user.html.twig', [
             'users'=>$users
         ]);
+    }
+
+
+    #[Route('/private/download/{id}', name: 'app_download', requirements:["id"=>"\d+"] )]
+    public function download(File $file) 
+    {
+
+        if ($file == null){
+            $this->redirectToRoute('app_files_by_user'); }
+        else{
+            return $this->file($this->getParameter('file_directory').'/'.$file->getServerName(),
+            $file->getOriginalName());
+        }
     }
 }

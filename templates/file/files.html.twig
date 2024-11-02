@@ -26,7 +26,7 @@
                                     <td>{{ file.serverName }}</td>
                                     <td>{{ file.sendingDate | date("d-m-Y à H:i:s") }}</td>
                                     <td>{{ file.extension }}</td>
-                                    <td>{{ file.size }}Mo</td>
+                                    <td>{{ file.size }}</td>
                                     <td>{{ file.user.surname | upper }} {{ file.user.name | capitalize }}</td>
                                 </tr>
                             {% endfor %}

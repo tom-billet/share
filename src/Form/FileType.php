@@ -13,16 +13,26 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType as TypeFileType;
+use Symfony\Component\Validator\Constraints\File as ValidatorFile;
 
 class FileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('originalName', TextType::class, ['label' => 'Nom original','attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
-            ->add('serverName', TextType::class, ['label' => 'Nom serveur','attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
-            ->add('extension', TextType::class, ['label' => 'Extension','attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
-            ->add('size', IntegerType::class, ['label' => 'Taille','attr' => ['class'=> 'form-control'], 'label_attr' => ['class'=> 'fw-bold']])
+        ->add('file', TypeFileType::class, array('label' => 'Fichier', 'mapped'=>false,'attr' => ['class'=>'form-control'], 'label_attr' => ['class'=> 'fw-bold'],'constraints' => [
+            new ValidatorFile([
+                'maxSize' => '200k',
+                'mimeTypes' => [
+                'application/pdf',
+                'application/x-pdf',
+                'image/jpeg',
+                'image/png',
+                ],
+            'mimeTypesMessage' => 'Le site accepte uniquement les fichiers PDF, PNG et JPG',
+            ])
+        ],))
             ->add('user', EntityType::class, [
                 'class' => User::class,
                 'label' => 'Utilisateur associé',
