@@ -17,4 +17,13 @@ class UserController extends AbstractController
             'users'=>$users
         ]);
     }
+
+    #[Route('/account/{id}', name: 'app_account')]
+    public function profil(UserRepository $userRepository, int $id): Response
+    {
+        $user = $userRepository->find($id);
+        return $this->render('user/account.html.twig', [
+            'user'=>$user
+        ]);
+    }
 }

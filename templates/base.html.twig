@@ -38,13 +38,16 @@
                         <a class="nav-link" href="{{path('app_legal')}}">Mentions légales</a>
                         </li>
                     {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{path('app_account', {'id':app.user.id})}}">Mon compte</a>
+                        </li>
                         <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Légal</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{path('app_about')}}">À propos</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{path('app_legal')}}">Mentions légales</a>
-                        </div>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Légal</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{{path('app_about')}}">À propos</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{path('app_legal')}}">Mentions légales</a>
+                            </div>
                         </li>
                     {% endif %}
 
