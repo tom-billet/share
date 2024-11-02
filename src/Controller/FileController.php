@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FileType;
 use App\Entity\File;
+use App\Repository\FileRepository;
 
 class FileController extends AbstractController
 {
@@ -32,5 +33,13 @@ class FileController extends AbstractController
         return $this->render('file/add_file.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/admin/files', name: 'app_files')]
+    public function Files(FileRepository $fileRepository): Response {
+        $files = $fileRepository->findAll();
+        return $this->render('file/files.html.twig', [
+            'files' => $files
+        ]); 
     }
 }

@@ -19,7 +19,7 @@
                         <tbody>
                             {% for category in categories | sort((a, b) => b.label <=> a.label) %}
                                 <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
-                                    <td>{{ category.label | capitalize }}</td>
+                                    <td>{{ category.label }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

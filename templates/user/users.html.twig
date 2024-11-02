@@ -22,6 +22,7 @@
 								<th scope="col">Nom</th>
 								<th scope="col">Date d'inscription</th>
 								<th scope="col">Rôle</th>
+								<th scope="col">Fichiers</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -38,6 +39,7 @@
 									{% else %}
 										<td>Utilisateur</td>
 									{% endif %}
+									<td>{{ user.files | length }}</td>
 								</tr>
 							{% endfor %}
 						</tbody>

@@ -47,6 +47,7 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/private, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/moderation, roles: ROLE_MOD }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
