@@ -14,6 +14,7 @@ use App\Entity\File;
 use App\Entity\User;
 use App\Form\FileUserType;
 use App\Form\AddFriendType;
+use App\Form\SelectFriendsType;
 
 class UserController extends AbstractController
 {
@@ -98,5 +99,30 @@ class UserController extends AbstractController
     }
 
 
-    
+    #[Route('/private/share/{id}', name: 'app_share')]
+    public function share(File $file, Request $request, EntityManagerInterface $em): Response
+    {
+
+        $friends = $this->getUser()->getAccept();
+
+        $form = $this->createForm(SelectFriendsType::class, null, [
+            'friends' => $friends
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $selectedFriends = $form->get('friends')->getData();
+            foreach ($selectedFriends as $friend) {
+                $file->addShare($friend);
+            }
+            $em->flush();
+            $this->addFlash('notice','Fichier partagé');
+            return $this->redirectToRoute('app_account');
+        }
+
+        return $this->render('user/share.html.twig', [
+            'file'=>$file,
+            'form' => $form->createView(),
+        ]);
+    }
 }

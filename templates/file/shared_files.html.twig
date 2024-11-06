@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}Liste des fichiers partagés{% endblock %}
+
+{% block body %}
+
+
+    <div class="container-fluid">
+        <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Fichiers reçus</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
+                <div class="table-responsive">
+
+                    {% if app.user.fileShare %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="fw-bold text-primary">
+                                <th scope="col">Fichier partagé</th>
+                                <th scope="col">Ami</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in app.user.fileShare | sort((a, b) => b.originalName <=> a.originalName) %}
+                                <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
+                                    <td><a href="{{path('app_download',{'id':file.id})}}" style="text-decoration: none">{{ file.originalName | lower }}</a></td>
+                                    <td>{{ file.user.surname | upper }} {{ file.user.name | capitalize }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <h3>Aucun fichier partagé</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

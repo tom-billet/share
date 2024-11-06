@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}}Partager un fichier{% endblock %}
+
+{% block body %}
+    <div cass='container-fuid'>
+        <div class='row justify-content-center'>
+            <div class='col-10 text-primary'>
+                <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Partager un fichier</h1>
+                <h3 class="text-secondary">Fichier que vous souhaitez partager : {{file.originalName}}</h3>
+                {{ form_start(form) }}
+
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Amis</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for choice in form.friends %}
+                                        <tr>
+                                            <td class="text-white bg-secondary">{{ choice.vars.label }}</td>
+                                            <td class="text-white bg-secondary">{{ form_widget(choice) }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class ="text-center"> {{ form_widget(form.partager) }}</div>
+                        </div>
+                    </div>
+                </div>  
+                {{ form_end(form) }}         
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

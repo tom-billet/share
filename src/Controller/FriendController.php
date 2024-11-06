@@ -93,15 +93,4 @@ class FriendController extends AbstractController
     }
 
 
-    /*#[Route('/moderation/delete-friend/{id}', name: 'app_delete_friend')]
-    public function deleteFriend(Request $request, EntityManagerInterface $em): Response {
-
-        if($category!=null){
-            $em->remove($category);
-            $em->flush();
-            $this->addFlash('notice','Catégorie supprimée');
-        }
-
-        return $this->redirectToRoute('app_categories');
-    }*/
 }

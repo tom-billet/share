@@ -41,9 +41,19 @@ class File
     #[ORM\ManyToMany(targetEntity: Subcategory::class, inversedBy: 'files')]
     private Collection $subcategories;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\JoinTable(name: "file_share")]
+    #[JoinColumn(name: 'file_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'friend_id', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'fileShare')]
+    private Collection $share;
+
     public function __construct()
     {
         $this->subcategories = new ArrayCollection();
+        $this->share = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +153,30 @@ class File
     public function removeSubcategory(Subcategory $subcategory): static
     {
         $this->subcategories->removeElement($subcategory);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getShare(): Collection
+    {
+        return $this->share;
+    }
+
+    public function addShare(User $share): static
+    {
+        if (!$this->share->contains($share)) {
+            $this->share->add($share);
+        }
+
+        return $this;
+    }
+
+    public function removeShare(User $share): static
+    {
+        $this->share->removeElement($share);
 
         return $this;
     }

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\FileType;
 use App\Entity\File;
+use App\Entity\User;
 use App\Repository\FileRepository;
 use App\Repository\SubcategoryRepository;
 use App\Repository\UserRepository;
@@ -94,5 +95,16 @@ class FileController extends AbstractController
             return $this->file($this->getParameter('file_directory').'/'.$file->getServerName(),
             $file->getOriginalName());
         }
+    }
+
+    #[Route('/private/shared-files', name: 'app_shared_files')]
+    public function sharedFiles(): Response {
+
+        $user = $this->getUser();
+        $sharedFiles = $this->getUser()->getFileShare($user);
+
+        return $this->render('file/shared_files.html.twig', [
+            'sharedFiles' => $sharedFiles
+        ]); 
     }
 }

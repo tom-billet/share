@@ -54,10 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, self>
      */
-
-    /**
-     * @var Collection<int, self>
-     */
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'ask')]
     private Collection $usersAsk;
 
@@ -83,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'accept')]
     private Collection $userAccept;
 
+    /**
+     * @var Collection<int, File>
+     */
+    #[ORM\ManyToMany(targetEntity: File::class, mappedBy: 'share')]
+    private Collection $fileShare;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -90,6 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->usersAsk = new ArrayCollection();
         $this->accept = new ArrayCollection();
         $this->userAccept = new ArrayCollection();
+        $this->fileShare = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +333,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->userAccept->removeElement($userAccept)) {
             $userAccept->removeAccept($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, File>
+     */
+    public function getFileShare(): Collection
+    {
+        return $this->fileShare;
+    }
+
+    public function addFileShare(File $fileShare): static
+    {
+        if (!$this->fileShare->contains($fileShare)) {
+            $this->fileShare->add($fileShare);
+            $fileShare->addShare($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFileShare(File $fileShare): static
+    {
+        if ($this->fileShare->removeElement($fileShare)) {
+            $fileShare->removeShare($this);
         }
 
         return $this;
