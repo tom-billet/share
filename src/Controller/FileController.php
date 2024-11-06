@@ -14,6 +14,7 @@ use App\Repository\FileRepository;
 use App\Repository\SubcategoryRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class FileController extends AbstractController
 {
@@ -119,10 +120,40 @@ class FileController extends AbstractController
     public function sharedFiles(): Response {
 
         $user = $this->getUser();
-        $sharedFiles = $this->getUser()->getFileShare($user);
+        $files = $user->getFiles();
+        $sharedFiles = new ArrayCollection();
+
+        foreach ($files as $file) {
+            if (!$file->getShare()->isEmpty()) {
+                $sharedFiles->add($file);
+            }
+        }
+
+        /*$sharedFiles = $this->getUser()->getFileShare($user);*/
 
         return $this->render('file/shared_files.html.twig', [
             'sharedFiles' => $sharedFiles
         ]); 
+    }
+
+    #[Route('/moderation/delete-shared-file/{idFile}/{idUser}', name: 'app_delete_shared_file')]
+    public function deleteShareFile(Request $request, EntityManagerInterface $em, UserRepository $userRepository, FileRepository $fileRepository): Response {
+
+        if($request->get('idFile')!=null && $request->get('idUser')!=null){
+            $idFile = $request->get('idFile');
+            $file = $fileRepository->find($idFile);
+
+            $idUser = $request->get('idUser');
+            $user = $userRepository->find($idUser);
+
+            if($file->getShare()->contains($user)){
+                $file->removeShare($user);
+                $em->persist($file);
+                $em->flush();
+                $this->addFlash('notice','Partage annulé');
+            }
+        }
+
+        return $this->redirectToRoute('app_shared_files');
     }
 }

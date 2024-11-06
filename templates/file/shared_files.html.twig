@@ -12,7 +12,7 @@
             <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
                 <div class="table-responsive">
 
-                    {% if app.user.fileShare %}
+                    {% if app.user.fileShare is not empty %}
                     <table class="table table-hover">
                         <thead>
                             <tr class="fw-bold text-primary">
@@ -25,6 +25,43 @@
                                 <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
                                     <td><a href="{{path('app_share_download',{'id':file.id})}}" style="text-decoration: none">{{ file.originalName | lower }}</a></td>
                                     <td>{{ file.user.surname | upper }} {{ file.user.name | capitalize }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <h3>Aucun fichier reçu</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Fichiers partagés</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
+                <div class="table-responsive">
+                    {% if sharedFiles is not empty %}
+                        <table class="table table-hover">
+                        <thead>
+                            <tr class="fw-bold text-primary">
+                                <th scope="col">Fichier partagé</th>
+                                <th scope="col">Ami(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in sharedFiles | sort((a, b) => b.originalName <=> a.originalName) %}
+                                <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
+                                    <td>{{ file.originalName }}</td>
+                                    <td>
+                                        {% if file.share | length > 0 %}
+                                            <ul>
+                                                {% for user in file.share %}
+                                                    <li>{{ user.name }} {{ user.surname }}
+                                                        <a href="{{path("app_delete_shared_file",{'idFile':file.id,'idUser':user.id})}}"><i class="bi bi-trash-fill text-dark"></i></a>
+                                                    </li>
+                                                {% endfor %} 
+                                            </ul>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
