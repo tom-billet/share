@@ -97,6 +97,24 @@ class FileController extends AbstractController
         }
     }
 
+    #[Route('/private/share-download/{id}', name: 'app_share_download',requirements: ["id"=>"\d+"] )]
+    public function shareDownload(File $file) 
+    {
+
+        $user = $this->getUser();
+        if ($file == null){
+            return $this->redirectToRoute('app_account');
+        }
+        else{
+            if(!$file->getShare()->contains($user)){
+                $this->addFlash('notice', 'Ce fichier ne vous a pas été partagé');
+                return $this->redirectToRoute('app_shared_files');
+            }
+            return $this->file($this->getParameter('file_directory').'/'.$file->getServerName(),
+            $file->getOriginalName());
+        }
+    }
+
     #[Route('/private/shared-files', name: 'app_shared_files')]
     public function sharedFiles(): Response {
 

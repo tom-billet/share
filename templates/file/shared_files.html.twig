@@ -23,7 +23,7 @@
                         <tbody>
                             {% for file in app.user.fileShare | sort((a, b) => b.originalName <=> a.originalName) %}
                                 <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
-                                    <td><a href="{{path('app_download',{'id':file.id})}}" style="text-decoration: none">{{ file.originalName | lower }}</a></td>
+                                    <td><a href="{{path('app_share_download',{'id':file.id})}}" style="text-decoration: none">{{ file.originalName | lower }}</a></td>
                                     <td>{{ file.user.surname | upper }} {{ file.user.name | capitalize }}</td>
                                 </tr>
                             {% endfor %}
