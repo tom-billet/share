@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} {{parent()}}Connexion{% endblock %}
+{% block title %} {{parent()}}Connexion Test{% endblock %}
 
 {% block body %}
 
     <div class="container-fluid">
-        <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Connectez-vous</h1>
+        <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Test Login</h1>
 
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 bg-white p-4 m-0 text-primary">
-                <form method="post">
+                <form method="post" id="loginForm">
                     {% if error %}
                         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="text-center">
-                        <button class="btn btn-lg btn-primary mt-2" type="submit">
+                        <button id="submitButton" class="btn btn-lg btn-primary mt-2" type="submit">
                             Sign in
                         </button>
                     </div>
@@ -42,5 +42,76 @@
             </div>
         </div>
     </div>
+
+    <script>
+    // Function to get a cookie by name
+    function getCookie(name) {
+        let value = "; " + document.cookie;
+        let parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    let loginAttempts = getCookie('loginAttempts') ? parseInt(getCookie('loginAttempts')) : 0;
+    let blockTime = getCookie('blockTime') ? parseInt(getCookie('blockTime')) : 0;
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    function updateBlockMessage() {
+        const remainingTime = blockTime - Math.floor(Date.now() / 1000);
+        if (remainingTime > 0) {
+            const blockMessage = document.querySelector('.block-message');
+            blockMessage.textContent = 'You are blocked for ' + remainingTime + ' seconds.';
+            setTimeout(updateBlockMessage, 1000);
+        } else {
+            document.querySelector('.block-message').remove();
+            document.getElementById('submitButton').disabled = false;
+        }
+    }
+
+    if (blockTime && currentTime < blockTime) {
+        const remainingTime = blockTime - currentTime;
+        const blockMessage = document.createElement('div');
+        blockMessage.className = 'alert alert-danger block-message';
+        blockMessage.textContent = 'You are blocked for ' + remainingTime + ' seconds.';
+        document.getElementById('loginForm').prepend(blockMessage);
+        document.getElementById('submitButton').disabled = true; // Disable the submit button
+        setTimeout(updateBlockMessage, 1000);
+    } else {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            const errorMessage = document.querySelector('.alert-danger');
+            if (errorMessage && errorMessage.textContent.includes('Invalid credentials')) {
+                loginAttempts++;
+                if (loginAttempts >= 5) {
+                    blockTime = currentTime + 60; // Block for 1 minute
+                    setCookie('blockTime', blockTime, 1);
+                    const blockMessage = document.createElement('div');
+                    blockMessage.className = 'alert alert-danger block-message';
+                    blockMessage.textContent = 'You are blocked for 60 seconds.';
+                    document.getElementById('loginForm').prepend(blockMessage);
+                    document.getElementById('submitButton').disabled = true; // Disable the submit button
+                    setTimeout(updateBlockMessage, 1000);
+                }
+                setCookie('loginAttempts', loginAttempts, 1); // Set cookie for 1 day
+                console.log('Login attempt number: ' + loginAttempts);
+            } else {
+                setCookie('loginAttempts', 0, 1); // Reset attempts on successful login
+                setCookie('blockTime', 0, 1); // Clear block time
+            }
+        });
+    }
+
+    // Log the current number of attempts on page load
+    console.log('Current login attempts: ' + loginAttempts);
+</script>
 
 {% endblock %}
