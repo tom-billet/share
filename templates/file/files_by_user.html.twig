@@ -16,6 +16,7 @@
                             <tr>
                                 <td class="text-white bg-secondary">{{user.surname | upper}} {{user.name | capitalize }}</td>
                             </tr>
+                            <!--Si le user possède des fichiers-->
                             {% if user.files | length > 0 %}
                                 {% for file in user.files %}
                                     <tr>

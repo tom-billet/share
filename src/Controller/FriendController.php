@@ -17,9 +17,12 @@ class FriendController extends AbstractController
     public function Friends(Request $request, EntityManagerInterface $em, UserRepository $userRepository): Response
     {
 
+        //Pour annuler une demande d'ami
         if($request->get('id')!=null){
+            //On récupère l'utilisateur visé
             $id = $request->get('id');
             $userAsk = $userRepository->find($id);
+            //Si on lui avait bien envoyé une demande, on la supprime
             if($userAsk){
                 $this->getUser()->removeAsk($userAsk);
                 $em->persist($this->getUser());
@@ -27,9 +30,12 @@ class FriendController extends AbstractController
             }
         }
 
+        //Pour refuser une demande d'ami
         if($request->get('idDecline')!=null){
+            //On récupère la demande
             $id = $request->get('idDecline');
             $userDecline = $userRepository->find($id);
+            //Si elle existe, on la supprime
             if($userDecline){
                 $this->getUser()->removeUsersAsk($userDecline);
                 $em->persist($this->getUser());
@@ -39,9 +45,12 @@ class FriendController extends AbstractController
             }
         }
 
+        //Pour accepter une demande d'ami
         if($request->get('idAccept')!=null){
+            //On récupère la demande
             $id = $request->get('idAccept');
             $userAccept = $userRepository->find($id);
+            //Si elle existe, on ajoute l'amitié (Accept) et on supprime la demande (Ask)
             if($userAccept){
                 $this->getUser()->addAccept($userAccept);
                 $userAccept->addAccept($this->getUser());
@@ -54,28 +63,34 @@ class FriendController extends AbstractController
             }
         }
 
+        //Pour supprimer une amitié
         if($request->get('idRemove')!=null){
+            //On récupère l'utilisateur à retirer des amis
             $id = $request->get('idRemove');
             $userRemove = $userRepository->find($id);
+            //S'il existe, on le supprimer des amis et réciproquement
             if($userRemove){
                 $user = $this->getUser();
                 $user->removeAccept($userRemove);
                 $userRemove->removeAccept($user);
 
                 
+                //On récupère les fichiers que l'utilisateur a reçu
                 $tab = $user->getFileShare();
-                /*$uR = $userRepository->find($userRemove->getId());
-                $u =  $userRepository->find($user->getId());*/
+                //Pour chaque fichier reçu par l'utilisateur, on regarde si le propriétaire est l'ancien ami
                 foreach ($tab as $file) {
-                    if($file->getShare()->contains($user)) {
+                    if($file->getUser() == $userRemove) {
+                        //Si c'est le cas on supprime le partage
                         $file->removeShare($user);
                         $em->persist($file);
                     }
                 }
 
+                //Pour chaque fichier reçu par l'ancien ami, on regarde si le propriétaire est l'utilisateur
                 $tab = $userRemove->getFileShare();
                 foreach ($tab as $file) {
-                    if($file->getShare()->contains($userRemove)) {
+                    if($file->getUser() == $user) {
+                        //Si c'est le cas on supprime le partage
                         $file->removeShare($userRemove);
                         $em->persist($file);
                     }

@@ -9,7 +9,9 @@
 		<div class='row justify-content-center'>
 			<div class='col-10 text-primary'>
 				<h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Ajouter un fichier</h1>
+				<!--Commencer le formulaire-->
 				{{ form_start(form) }}
+				<!--Afficher ces champs en particulier-->
                 {{ form_row(form.file) }}
                 {{ form_row(form.user) }}
 					<div class="table-responsive">
@@ -17,7 +19,9 @@
 							{% set id = null %}
 							{% for subcategory in subcategories %}
 								<tr>
+									<!--Si on passe à une nouvelle subcategory-->
 									{% if id != subcategory.category.id %}
+										
 										{% set id = subcategory.category.id %}
 										<tr><td class="text-primary fw-bold">{{subcategory.category.id}}) {{subcategory.category.label}}<td></td></tr>
 									{% endif %}
@@ -25,12 +29,15 @@
 										-
 										{{subcategory.number}})
 										{{subcategory.label}}</td>
+									<!--Afficher ces champs en particulier-->
 									<td class="text-primary">{{ form_widget(form.subcategories[subcategory.id]) }}</td>
 								</tr>
 							{% endfor %}
 						</table>
 					</div>
+				<!--Afficher ces champs en particulier-->
                 {{ form_row(form.ajouter) }}
+				<!--Afficher le reste du formulaire (non précisé au-dessus)-->
                 {{ form_end(form) }}
 				</div>
 			</div>

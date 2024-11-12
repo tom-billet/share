@@ -41,20 +41,25 @@ class BaseController extends AbstractController
     #[Route('/contact', name: 'app_contact')]
     public function contact(Request $request, EntityManagerInterface $em): Response
     {
+        /*Préparer la création du contact*/
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
 
         if($request->isMethod('POST')){
             $form->handleRequest($request);
             if($form->isSubmitted()&&$form->isValid()){
+                /*Ajout de la date actuelle de façon automatique*/
                 $contact->setSendingDate(new \Datetime());
+                /*Ajouter le contact*/
                 $em->persist($contact);
+                /*Enregistrer les modifications*/
                 $em->flush();
                 $this->addFlash('notice','Message envoyé');
                 return $this->redirectToRoute('app_contact');
             }
         }
 
+        /*Envoi du formulaire à la vue*/
         return $this->render('base/contact.html.twig', [
             'form' => $form->createView()
         ]);
@@ -63,23 +68,25 @@ class BaseController extends AbstractController
     #[Route('/moderation/add-category', name: 'app_add_category')]
     public function add_category(Request $request, EntityManagerInterface $em): Response
     {
+        /*Préparer la création de la category*/
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
 
         if($request->isMethod('POST')){
             $form->handleRequest($request);
             if($form->isSubmitted()&&$form->isValid()){
+                /*Appliquer les modifications*/
                 $em->persist($category);
+                /*Enregistrer les modifications*/
                 $em->flush();
                 $this->addFlash('notice','Catégorie ajoutée');
                 return $this->redirectToRoute('app_add_category');
             }
         }
 
-
+        /*Envoi du formulaire à la vue*/
         return $this->render('base/add_category.html.twig', [
             'form' => $form->createView()
-
         ]);
     }
 }

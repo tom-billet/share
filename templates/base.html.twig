@@ -27,6 +27,7 @@
                     <li class="nav-item">
                     <a class="nav-link" href="{{path('app_contact')}}">Contact</a>
                     </li>
+                    <!--Si la personne n'est pas connectée-->
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                         <li class="nav-item">
                         <a class="nav-link" href="{{path('app_about')}}">À propos</a>
@@ -34,6 +35,7 @@
                         <li class="nav-item">
                         <a class="nav-link" href="{{path('app_legal')}}">Mentions légales</a>
                         </li>
+                    <!--Si la personne est connectée-->
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{path('app_account')}}">Mon compte</a>
@@ -57,6 +59,7 @@
                         </li>
                     {% endif %}
 
+                    <!--Si la personne est modératrice ou admin-->
                     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MOD') %}
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Mod</a>
@@ -69,6 +72,7 @@
                         </li>
                     {% endif %}
 
+                    <!--Si la personne est admin-->
                     {% if is_granted('ROLE_ADMIN')%}
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>

@@ -16,6 +16,7 @@ class SubcategoryController extends AbstractController
     #[Route('/moderation/add-subcategory', name: 'app_add_subcategory')]
     public function add_Subcategory(Request $request, EntityManagerInterface $em): Response
     {
+        /*Préparer la création de la subcategory*/
         $subcategory = new Subcategory();
         $form = $this->createForm(AddSubcategoryType::class,$subcategory);
 
@@ -23,9 +24,11 @@ class SubcategoryController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted()&&$form->isValid()){
                 try {
+                    //S'il n'y a pas d'erreur, on sauvegarde l'ajout
                     $em->persist($subcategory);
                     $em->flush();
                 } catch (\RuntimeException $e) {
+                    //Sinon on affiche l'erreur et on recharge la page
                     $this->addFlash('notice', $e->getMessage());
                     return $this->redirectToRoute('app_add_subcategory');
                 }
@@ -34,6 +37,7 @@ class SubcategoryController extends AbstractController
             }
         }
 
+        //On envoie le formulaire à la vue
         return $this->render('subcategory/add_subcategory.html.twig', [
             'form' => $form->createView()
         ]);
@@ -47,6 +51,7 @@ class SubcategoryController extends AbstractController
         if($request->isMethod('POST')){
             $form->handleRequest($request);
             if ($form->isSubmitted()&&$form->isValid()){
+                //On sauvegarde la modification et on retourne sur la page categories
                 $em->persist($subcategory);
                 $em->flush();
                 $this->addFlash('notice','Sous-catégorie modifiée');
@@ -54,6 +59,7 @@ class SubcategoryController extends AbstractController
             }
         }
         
+        //On envoie le formulaire à la vue
         return $this->render('subcategory/edit_subcategory.html.twig', [
             'form' => $form->createView()
         ]); 
@@ -63,6 +69,7 @@ class SubcategoryController extends AbstractController
     #[Route('/moderation/delete-subcategory/{id}', name: 'app_delete_subcategory')]
     public function deleteSubcategory(Request $request, Subcategory $subcategory, EntityManagerInterface $em): Response {
 
+        /*Si un id de subcategory est passé dans l'URL, on supprime la subcategory et on recharge la page*/
         if($subcategory!=null){
             $em->remove($subcategory);
             $em->flush();

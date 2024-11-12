@@ -13,6 +13,7 @@
 		<div class="row justify-content-center">
 			<div class="col-12 col-md-8 bg-white p-4 m-0 text-primary">
 				<div class="table-responsive">
+					<!--Commencer le formulaire-->
                     {{ form_start(form) }}
 					<table class="table table-hover">
 						<thead>
@@ -24,10 +25,12 @@
 							</tr>
 						</thead>
 						<tbody>
+							<!--Tri par ordre alphabétique-->
 							{% for category in categories | sort((a, b) => a.label <=> b.label) %}
 								<tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
 									<td>{{ category.label }}
                                     
+										<!--S'il y a quelque chose dans category.subcategories-->
 										{% if category.subcategories | length > 0 %}
 											<ul>
 												{% for sc in category.subcategories |sort((a, b) => a.number <=> b.number) %}
@@ -44,12 +47,15 @@
 									</td>
                                     <td><a href="{{path("app_edit_category",{'id':category.id})}}"><i class="bi bi-pen-fill text-dark"></i></a></td>
                                     <td><a href="{{path("app_delete_category",{'id':category.id})}}"><i class="bi bi-trash-fill text-dark"></i></a></td>
+									<!--Afficher ce champ en particulier-->
                                     <td>{{ form_widget(form.categories[category.id]) }}</td>
                                 </tr>
 							{% endfor %}
 						</tbody>
 					</table>
+					<!--Afficher ce champ en particulier-->
                     <div class ="text-center"> {{ form_widget(form.supprimer) }}</div>
+				<!--Afficher le reste du formulaire (non précisé au-dessus)-->
                 {{ form_end(form) }}
 				</div>
 			</div>

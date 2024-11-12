@@ -32,6 +32,7 @@
 			</div>
 			<div class="col-6 col-md-6 bg-white p-4 m-0 text-primary text-center" style="border-right: 2px solid #158cba;">
 				<span class="fw-bold text-center">Demandes reçues</span>
+				<!--Si des demandes ont été reçues-->
 				{% if app.user.usersAsk | length > 0 %}
 					{% for d in app.user.usersAsk %}
 						<div class="list-group m-2">
@@ -46,8 +47,9 @@
 					{% endfor %}
 				{% endif %}
 			</div>
+			<!--Si des demandes ont été envoyées-->
 			<div class="col-6 col-md-6 bg-white p-4 m-0 text-primary text-center">
-				<span class="fw-bold text-center m-4 p-4">Remandes envoyées</span>
+				<span class="fw-bold text-center m-4 p-4">Demandes envoyées</span>
 				{% if app.user.ask | length > 0 %}
 					{% for d in app.user.ask %}
 						<div class="list-group m-2">
@@ -61,6 +63,7 @@
 					{% endfor %}
 				{% endif %}
 			</div>
+			<!--Amis-->
 			<div class="col-6 col-md-6 bg-white p-4 m-0 text-primary text-center">
 				<h2 class="fw-bold text-center m-4 p-4">Vos amis</h2>
 				{% if app.user.accept | length > 0 %}

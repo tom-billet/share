@@ -21,6 +21,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!--Tri par date de la plus récente à la plus ancienne-->
                             {% for contact in contacts | sort((a, b) => b.sendingDate <=> a.sendingDate) %}
                                 <tr class="{{ cycle(['table-primary','table-secondary'], loop.index0) }}">
                                     <td>{{ contact.name | capitalize }}</td>
