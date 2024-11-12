@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const passwordField = document.getElementById('registrationForm_plainPassword'); // Vérifie bien que l'ID est correct
+    const passwordField = document.getElementById('registration_form_plainPassword'); // Vérifie bien que l'ID est correct
     const submitButton = document.getElementById('submit-button');
     const passwordRequirements = document.getElementById('password-requirements');
 
