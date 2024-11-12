@@ -2,6 +2,7 @@
 
 {% block title %}{{parent()}}Inscription{% endblock %}
 
+
 {% block body %}
     <div class="container-fluid">
         <h1 class="text-center text-primary mt-4 pt-4 display-1 fw-bold">Inscription</h1>
@@ -32,5 +33,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_link_tags('registerMDP') }}
+    {{ encore_entry_script_tags('registerMDP') }}
 {% endblock %}

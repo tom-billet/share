@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     passwordField.addEventListener('input', function () {
         const password = passwordField.value;
-        console.log(password);
 
         // Validation des règles de sécurité pour le mot de passe
         const minLength = 12;
