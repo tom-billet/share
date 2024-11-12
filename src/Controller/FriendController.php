@@ -61,9 +61,30 @@ class FriendController extends AbstractController
                 $user = $this->getUser();
                 $user->removeAccept($userRemove);
                 $userRemove->removeAccept($user);
+
+                
+                $tab = $user->getFileShare();
+                /*$uR = $userRepository->find($userRemove->getId());
+                $u =  $userRepository->find($user->getId());*/
+                foreach ($tab as $file) {
+                    if($file->getShare()->contains($user)) {
+                        $file->removeShare($user);
+                        $em->persist($file);
+                    }
+                }
+
+                $tab = $userRemove->getFileShare();
+                foreach ($tab as $file) {
+                    if($file->getShare()->contains($userRemove)) {
+                        $file->removeShare($userRemove);
+                        $em->persist($file);
+                    }
+                }
+
+
                 $em->persist($user);
                 $em->flush();
-                $this->addFlash('notice','Amitié supprimée');
+                $this->addFlash('notice','Amitié supprimée, partages annulés');
                 return $this->redirectToRoute('app_friends');
             }
         }
