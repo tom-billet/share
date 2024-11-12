@@ -17,14 +17,20 @@
                     {{ form_row(registrationForm.plainPassword, {
                         label: 'Mot de passe'
                     }) }}
+                    <div id="password-requirements" class="text-danger mt-2"></div>
                     {{ form_row(registrationForm.agreeTerms) }}
 
                     <div class="text-center">
-                        <button type="submit" class="btn">S'inscrire</button>
+                        <button type="submit" class="btn" id="submit-button" disabled>S'inscrire</button>
                     </div>
                 {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('registerMDP') }}
 {% endblock %}
