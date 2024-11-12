@@ -58,9 +58,10 @@ class FriendController extends AbstractController
             $id = $request->get('idRemove');
             $userRemove = $userRepository->find($id);
             if($userRemove){
-                $this->getUser()->removeAccept($userRemove);
-                $userRemove->removeAccept($this->getUser());
-                $em->persist($this->getUser());
+                $user = $this->getUser();
+                $user->removeAccept($userRemove);
+                $userRemove->removeAccept($user);
+                $em->persist($user);
                 $em->flush();
                 $this->addFlash('notice','Amitié supprimée');
                 return $this->redirectToRoute('app_friends');
