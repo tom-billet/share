@@ -129,8 +129,6 @@ class FileController extends AbstractController
             }
         }
 
-        /*$sharedFiles = $this->getUser()->getFileShare($user);*/
-
         return $this->render('file/shared_files.html.twig', [
             'sharedFiles' => $sharedFiles
         ]); 
