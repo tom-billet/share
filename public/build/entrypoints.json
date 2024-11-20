@@ -1,0 +1,20 @@
+{
+  "entrypoints": {
+    "app": {
+      "js": [
+        "/equipe/share/build/runtime.9b90c2b9.js",
+        "/equipe/share/build/app.e09270c8.js"
+      ],
+      "css": [
+        "/equipe/share/build/app.b75294ae.css"
+      ]
+    },
+    "registerMDP": {
+      "js": [
+        "/equipe/share/build/runtime.9b90c2b9.js",
+        "/equipe/share/build/906.64f4c2a2.js",
+        "/equipe/share/build/registerMDP.a8c03758.js"
+      ]
+    }
+  }
+}
