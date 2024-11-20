@@ -39,24 +39,30 @@ class BaseController extends AbstractController
     }
 
     #[Route('/contact', name: 'app_contact')]
-    public function contact(Request $request, EntityManagerInterface $em): Response
+    public function contactForm(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
 
-        if($request->isMethod('POST')){
-            $form->handleRequest($request);
-            if($form->isSubmitted()&&$form->isValid()){
-                $contact->setSendingDate(new \Datetime());
-                $em->persist($contact);
-                $em->flush();
-                $this->addFlash('notice','Message envoyé');
-                return $this->redirectToRoute('app_contact');
-            }
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Sanitize inputs
+            $contact->setName(filter_var($contact->getName(), FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $contact->setEmail(filter_var($contact->getEmail(), FILTER_SANITIZE_EMAIL));
+            $contact->setTopic(filter_var($contact->getTopic(), FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+            $contact->setMessage(filter_var($contact->getMessage(), FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+            $contact->setSendingDate(new \DateTime());
+            $entityManager->persist($contact);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Form submitted successfully!');
+
+            return $this->redirectToRoute('app_contact');
         }
 
         return $this->render('base/contact.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
