@@ -16,6 +16,18 @@ class FileRepository extends ServiceEntityRepository
         parent::__construct($registry, File::class);
     }
 
+    /**
+     * @return File[] Returns an array of File objects
+     */
+    public function files()
+    {
+        return $this
+            ->createQueryBuilder('f')
+            ->orderBy('f.sendingDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return File[] Returns an array of File objects
     //     */
