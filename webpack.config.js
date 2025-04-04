@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('registerMDP', './assets/registerMDP.js')
+    .addEntry('deleteFriend', './assets/deleteFriend.js')
 
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.

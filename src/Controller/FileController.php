@@ -68,7 +68,7 @@ class FileController extends AbstractController
 
     #[Route('/admin/files', name: 'app_files')]
     public function Files(FileRepository $fileRepository): Response {
-        $files = $fileRepository->findAll();
+        $files = $fileRepository->files();
         return $this->render('file/files.html.twig', [
             'files' => $files
         ]); 
