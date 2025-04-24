@@ -75,7 +75,7 @@ class FileController extends AbstractController
     }
 
 
-    #[Route('/private/files-user', name: 'app_files_by_user')]
+    #[Route('/admin/files-user', name: 'app_files_by_user')]
     public function filesByUser(UserRepository $userRepository): Response{
 
         $users = $userRepository->findBy([], ['surname'=>'asc', 'name'=>'asc']);
